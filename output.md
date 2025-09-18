@@ -2,21 +2,20 @@
 
 Packages:
 
-- [entigo.com/v1alpha1](#entigocomv1alpha1)
+- [artifacts.entigo.com/v1alpha1](#artifactsentigocomv1alpha1)
+- [tenancy.entigo.com/v1alpha1](#tenancyentigocomv1alpha1)
 
-# entigo.com/v1alpha1
+# artifacts.entigo.com/v1alpha1
 
 Resource Types:
 
 - [ECRRepository](#ecrrepository)
 
-- [S3Bucket](#s3bucket)
-
 
 
 
 ## ECRRepository
-<sup><sup>[↩ Parent](#entigocomv1alpha1 )</sup></sup>
+<sup><sup>[↩ Parent](#artifactsentigocomv1alpha1 )</sup></sup>
 
 
 
@@ -37,7 +36,7 @@ Resource Types:
     <tbody><tr>
       <td><b>apiVersion</b></td>
       <td>string</td>
-      <td>entigo.com/v1alpha1</td>
+      <td>artifacts.entigo.com/v1alpha1</td>
       <td>true</td>
       </tr>
       <tr>
@@ -198,8 +197,17 @@ Resource Types:
       </tr></tbody>
 </table>
 
-## S3Bucket
-<sup><sup>[↩ Parent](#entigocomv1alpha1 )</sup></sup>
+# tenancy.entigo.com/v1alpha1
+
+Resource Types:
+
+- [SecurityZone](#securityzone)
+
+
+
+
+## SecurityZone
+<sup><sup>[↩ Parent](#tenancyentigocomv1alpha1 )</sup></sup>
 
 
 
@@ -220,13 +228,13 @@ Resource Types:
     <tbody><tr>
       <td><b>apiVersion</b></td>
       <td>string</td>
-      <td>entigo.com/v1alpha1</td>
+      <td>tenancy.entigo.com/v1alpha1</td>
       <td>true</td>
       </tr>
       <tr>
       <td><b>kind</b></td>
       <td>string</td>
-      <td>S3Bucket</td>
+      <td>SecurityZone</td>
       <td>true</td>
       </tr>
       <tr>
@@ -235,14 +243,14 @@ Resource Types:
       <td>Refer to the Kubernetes API documentation for the fields of the `metadata` field.</td>
       <td>true</td>
       </tr><tr>
-        <td><b><a href="#s3bucketspec">spec</a></b></td>
+        <td><b><a href="#securityzonespec">spec</a></b></td>
         <td>object</td>
         <td>
           <br/>
         </td>
         <td>false</td>
       </tr><tr>
-        <td><b><a href="#s3bucketstatus">status</a></b></td>
+        <td><b><a href="#securityzonestatus">status</a></b></td>
         <td>object</td>
         <td>
           <br/>
@@ -252,8 +260,8 @@ Resource Types:
 </table>
 
 
-### S3Bucket.spec
-<sup><sup>[↩ Parent](#s3bucket)</sup></sup>
+### SecurityZone.spec
+<sup><sup>[↩ Parent](#securityzone)</sup></sup>
 
 
 
@@ -269,94 +277,284 @@ Resource Types:
         </tr>
     </thead>
     <tbody><tr>
-        <td><b>bucketName</b></td>
-        <td>string</td>
+        <td><b><a href="#securityzonespecparameters">parameters</a></b></td>
+        <td>object</td>
         <td>
-          Name of the S3 bucket<br/>
+          Security zone configuration parameters<br/>
         </td>
         <td>true</td>
       </tr><tr>
-        <td><b><a href="#s3bucketspeccorsrulesindex">corsRules</a></b></td>
-        <td>[]object</td>
+        <td><b>writeConnectionSecretsToNamespace</b></td>
+        <td>string</td>
         <td>
-          CORS rules for the bucket<br/>
+          Namespace to write connection secrets to<br/>
+        </td>
+        <td>false</td>
+      </tr></tbody>
+</table>
+
+
+### SecurityZone.spec.parameters
+<sup><sup>[↩ Parent](#securityzonespec)</sup></sup>
+
+
+
+Security zone configuration parameters
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Required</th>
+        </tr>
+    </thead>
+    <tbody><tr>
+        <td><b>name</b></td>
+        <td>string</td>
+        <td>
+          Security zone name (used for namespace, project, and nodepool naming)<br/>
+        </td>
+        <td>true</td>
+      </tr><tr>
+        <td><b>additionalSourceRepos</b></td>
+        <td>[]string</td>
+        <td>
+          List of allowed source repositories for ArgoCD<br/>
+          <br/>
+            <i>Default</i>: []<br/>
         </td>
         <td>false</td>
       </tr><tr>
-        <td><b>deletionProtection</b></td>
+        <td><b>description</b></td>
+        <td>string</td>
+        <td>
+          Description of the security zone<br/>
+          <br/>
+            <i>Default</i>: Security zone for isolated team deployment<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b><a href="#securityzonespecparametersnodepool">nodePool</a></b></td>
+        <td>object</td>
+        <td>
+          Karpenter node pool configuration<br/>
+          <br/>
+            <i>Default</i>: map[]<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b><a href="#securityzonespecparametersrbac">rbac</a></b></td>
+        <td>object</td>
+        <td>
+          RBAC groups configuration for ArgoCD roles<br/>
+          <br/>
+            <i>Default</i>: map[]<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b><a href="#securityzonespecparametersresourcequota">resourceQuota</a></b></td>
+        <td>object</td>
+        <td>
+          Resource quota configuration<br/>
+          <br/>
+            <i>Default</i>: map[]<br/>
+        </td>
+        <td>false</td>
+      </tr></tbody>
+</table>
+
+
+### SecurityZone.spec.parameters.nodePool
+<sup><sup>[↩ Parent](#securityzonespecparameters)</sup></sup>
+
+
+
+Karpenter node pool configuration
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Required</th>
+        </tr>
+    </thead>
+    <tbody><tr>
+        <td><b>capacityType</b></td>
+        <td>[]string</td>
+        <td>
+          <br/>
+          <br/>
+            <i>Default</i>: [spot on-demand]<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>consolidateAfter</b></td>
+        <td>string</td>
+        <td>
+          Time to wait before consolidation<br/>
+          <br/>
+            <i>Default</i>: 1m<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>consolidationPolicy</b></td>
+        <td>enum</td>
+        <td>
+          <br/>
+          <br/>
+            <i>Enum</i>: WhenEmpty, WhenEmptyOrUnderutilized<br/>
+            <i>Default</i>: WhenEmptyOrUnderutilized<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>cpuLimit</b></td>
+        <td>integer</td>
+        <td>
+          Maximum CPU limit for the node pool<br/>
+          <br/>
+            <i>Default</i>: 10<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>enabled</b></td>
         <td>boolean</td>
         <td>
-          Enable deletion protection<br/>
+          Enable dedicated node pool creation<br/>
           <br/>
             <i>Default</i>: true<br/>
         </td>
         <td>false</td>
       </tr><tr>
-        <td><b>kmsKeyArn</b></td>
+        <td><b>instanceCategories</b></td>
+        <td>[]string</td>
+        <td>
+          AWS instance categories (t, m, c, r)<br/>
+          <br/>
+            <i>Default</i>: [t]<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>instanceCpu</b></td>
+        <td>[]string</td>
+        <td>
+          Allowed CPU counts for instances<br/>
+          <br/>
+            <i>Default</i>: [2 4 8]<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>nodeClassName</b></td>
         <td>string</td>
         <td>
-          KMS key ARN for encryption<br/>
+          EC2NodeClass name to use<br/>
           <br/>
-            <i>Default</i>: my-kms-key<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b><a href="#s3bucketspeclifecyclerulesindex">lifecycleRules</a></b></td>
-        <td>[]object</td>
-        <td>
-          Lifecycle rules for the bucket<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b><a href="#s3bucketspeclogging">logging</a></b></td>
-        <td>object</td>
-        <td>
-          Server access logging configuration<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b><a href="#s3bucketspecpublicaccessblock">publicAccessBlock</a></b></td>
-        <td>object</td>
-        <td>
-          Public access block configuration<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b><a href="#s3bucketspecreplication">replication</a></b></td>
-        <td>object</td>
-        <td>
-          Replication configuration<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>tags</b></td>
-        <td>map[string]string</td>
-        <td>
-          AWS tags for the bucket<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>versioning</b></td>
-        <td>boolean</td>
-        <td>
-          Enable versioning for the bucket<br/>
-          <br/>
-            <i>Default</i>: false<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b><a href="#s3bucketspecwebsiteconfiguration">websiteConfiguration</a></b></td>
-        <td>object</td>
-        <td>
-          Static website hosting configuration<br/>
+            <i>Default</i>: karpenter<br/>
         </td>
         <td>false</td>
       </tr></tbody>
 </table>
 
 
-### S3Bucket.spec.corsRules[index]
-<sup><sup>[↩ Parent](#s3bucketspec)</sup></sup>
+### SecurityZone.spec.parameters.rbac
+<sup><sup>[↩ Parent](#securityzonespecparameters)</sup></sup>
+
+
+
+RBAC groups configuration for ArgoCD roles
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Required</th>
+        </tr>
+    </thead>
+    <tbody><tr>
+        <td><b>fullAccessGroups</b></td>
+        <td>[]string</td>
+        <td>
+          Groups with full access to applications and projects<br/>
+          <br/>
+            <i>Default</i>: []<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>gitlabGroups</b></td>
+        <td>[]string</td>
+        <td>
+          Groups with GitLab CI/CD deployment access<br/>
+          <br/>
+            <i>Default</i>: []<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>readOnlyGroups</b></td>
+        <td>[]string</td>
+        <td>
+          Groups with read-only access<br/>
+          <br/>
+            <i>Default</i>: []<br/>
+        </td>
+        <td>false</td>
+      </tr></tbody>
+</table>
+
+
+### SecurityZone.spec.parameters.resourceQuota
+<sup><sup>[↩ Parent](#securityzonespecparameters)</sup></sup>
+
+
+
+Resource quota configuration
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Required</th>
+        </tr>
+    </thead>
+    <tbody><tr>
+        <td><b>cpuRequests</b></td>
+        <td>string</td>
+        <td>
+          <br/>
+          <br/>
+            <i>Default</i>: 10<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>memoryRequests</b></td>
+        <td>string</td>
+        <td>
+          <br/>
+          <br/>
+            <i>Default</i>: 10Gi<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>pods</b></td>
+        <td>string</td>
+        <td>
+          <br/>
+          <br/>
+            <i>Default</i>: 10<br/>
+        </td>
+        <td>false</td>
+      </tr></tbody>
+</table>
+
+
+### SecurityZone.status
+<sup><sup>[↩ Parent](#securityzone)</sup></sup>
 
 
 
@@ -372,46 +570,39 @@ Resource Types:
         </tr>
     </thead>
     <tbody><tr>
-        <td><b>allowedHeaders</b></td>
-        <td>[]string</td>
+        <td><b><a href="#securityzonestatusconditionsindex">conditions</a></b></td>
+        <td>[]object</td>
         <td>
           <br/>
         </td>
         <td>false</td>
       </tr><tr>
-        <td><b>allowedMethods</b></td>
-        <td>[]string</td>
+        <td><b><a href="#securityzonestatusconnectiondetails">connectionDetails</a></b></td>
+        <td>object</td>
         <td>
           <br/>
         </td>
         <td>false</td>
       </tr><tr>
-        <td><b>allowedOrigins</b></td>
-        <td>[]string</td>
+        <td><b><a href="#securityzonestatusnamespacestatus">namespaceStatus</a></b></td>
+        <td>object</td>
         <td>
-          <br/>
+          Status information about the created namespace<br/>
         </td>
         <td>false</td>
       </tr><tr>
-        <td><b>exposedHeaders</b></td>
-        <td>[]string</td>
+        <td><b><a href="#securityzonestatusnodepoolstatus">nodePoolStatus</a></b></td>
+        <td>object</td>
         <td>
-          <br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>maxAgeSeconds</b></td>
-        <td>integer</td>
-        <td>
-          <br/>
+          Status information about the created node pool<br/>
         </td>
         <td>false</td>
       </tr></tbody>
 </table>
 
 
-### S3Bucket.spec.lifecycleRules[index]
-<sup><sup>[↩ Parent](#s3bucketspec)</sup></sup>
+### SecurityZone.status.conditions[index]
+<sup><sup>[↩ Parent](#securityzonestatus)</sup></sup>
 
 
 
@@ -427,53 +618,36 @@ Resource Types:
         </tr>
     </thead>
     <tbody><tr>
-        <td><b><a href="#s3bucketspeclifecyclerulesindexexpiration">expiration</a></b></td>
-        <td>object</td>
-        <td>
-          <br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>id</b></td>
+        <td><b>lastTransitionTime</b></td>
         <td>string</td>
         <td>
           <br/>
         </td>
-        <td>false</td>
+        <td>true</td>
       </tr><tr>
-        <td><b><a href="#s3bucketspeclifecyclerulesindexnoncurrentversionexpiration">noncurrentVersionExpiration</a></b></td>
-        <td>object</td>
-        <td>
-          <br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b><a href="#s3bucketspeclifecyclerulesindexnoncurrentversiontransitionsindex">noncurrentVersionTransitions</a></b></td>
-        <td>[]object</td>
-        <td>
-          <br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>prefix</b></td>
+        <td><b>reason</b></td>
         <td>string</td>
         <td>
           <br/>
         </td>
-        <td>false</td>
+        <td>true</td>
       </tr><tr>
         <td><b>status</b></td>
-        <td>enum</td>
+        <td>string</td>
         <td>
           <br/>
-          <br/>
-            <i>Enum</i>: Enabled, Disabled<br/>
-            <i>Default</i>: Enabled<br/>
         </td>
-        <td>false</td>
+        <td>true</td>
       </tr><tr>
-        <td><b><a href="#s3bucketspeclifecyclerulesindextransitionsindex">transitions</a></b></td>
-        <td>[]object</td>
+        <td><b>type</b></td>
+        <td>string</td>
+        <td>
+          <br/>
+        </td>
+        <td>true</td>
+      </tr><tr>
+        <td><b>message</b></td>
+        <td>string</td>
         <td>
           <br/>
         </td>
@@ -482,8 +656,8 @@ Resource Types:
 </table>
 
 
-### S3Bucket.spec.lifecycleRules[index].expiration
-<sup><sup>[↩ Parent](#s3bucketspeclifecyclerulesindex)</sup></sup>
+### SecurityZone.status.connectionDetails
+<sup><sup>[↩ Parent](#securityzonestatus)</sup></sup>
 
 
 
@@ -499,22 +673,24 @@ Resource Types:
         </tr>
     </thead>
     <tbody><tr>
-        <td><b>days</b></td>
-        <td>integer</td>
+        <td><b>lastPublishedTime</b></td>
+        <td>string</td>
         <td>
           <br/>
+          <br/>
+            <i>Format</i>: date-time<br/>
         </td>
         <td>false</td>
       </tr></tbody>
 </table>
 
 
-### S3Bucket.spec.lifecycleRules[index].noncurrentVersionExpiration
-<sup><sup>[↩ Parent](#s3bucketspeclifecyclerulesindex)</sup></sup>
+### SecurityZone.status.namespaceStatus
+<sup><sup>[↩ Parent](#securityzonestatus)</sup></sup>
 
 
 
-
+Status information about the created namespace
 
 <table>
     <thead>
@@ -526,29 +702,29 @@ Resource Types:
         </tr>
     </thead>
     <tbody><tr>
-        <td><b>days</b></td>
-        <td>integer</td>
+        <td><b>name</b></td>
+        <td>string</td>
         <td>
           <br/>
         </td>
         <td>false</td>
       </tr><tr>
-        <td><b>newerNoncurrentVersions</b></td>
-        <td>integer</td>
+        <td><b>ready</b></td>
+        <td>boolean</td>
         <td>
-          Number of newer noncurrent versions to retain before expiration<br/>
+          <br/>
         </td>
         <td>false</td>
       </tr></tbody>
 </table>
 
 
-### S3Bucket.spec.lifecycleRules[index].noncurrentVersionTransitions[index]
-<sup><sup>[↩ Parent](#s3bucketspeclifecyclerulesindex)</sup></sup>
+### SecurityZone.status.nodePoolStatus
+<sup><sup>[↩ Parent](#securityzonestatus)</sup></sup>
 
 
 
-
+Status information about the created node pool
 
 <table>
     <thead>
@@ -560,306 +736,24 @@ Resource Types:
         </tr>
     </thead>
     <tbody><tr>
-        <td><b>days</b></td>
-        <td>integer</td>
-        <td>
-          <br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>newerNoncurrentVersions</b></td>
-        <td>integer</td>
-        <td>
-          Number of newer noncurrent versions to retain<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>storageClass</b></td>
-        <td>enum</td>
-        <td>
-          <br/>
-          <br/>
-            <i>Enum</i>: STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, GLACIER_IR<br/>
-        </td>
-        <td>false</td>
-      </tr></tbody>
-</table>
-
-
-### S3Bucket.spec.lifecycleRules[index].transitions[index]
-<sup><sup>[↩ Parent](#s3bucketspeclifecyclerulesindex)</sup></sup>
-
-
-
-
-
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Required</th>
-        </tr>
-    </thead>
-    <tbody><tr>
-        <td><b>days</b></td>
+        <td><b>cpuLimit</b></td>
         <td>integer</td>
         <td>
           <br/>
         </td>
         <td>false</td>
       </tr><tr>
-        <td><b>storageClass</b></td>
-        <td>enum</td>
+        <td><b>name</b></td>
+        <td>string</td>
         <td>
           <br/>
-          <br/>
-            <i>Enum</i>: STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, GLACIER_IR<br/>
         </td>
         <td>false</td>
-      </tr></tbody>
-</table>
-
-
-### S3Bucket.spec.logging
-<sup><sup>[↩ Parent](#s3bucketspec)</sup></sup>
-
-
-
-Server access logging configuration
-
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Required</th>
-        </tr>
-    </thead>
-    <tbody><tr>
-        <td><b>enabled</b></td>
+      </tr><tr>
+        <td><b>ready</b></td>
         <td>boolean</td>
         <td>
           <br/>
-          <br/>
-            <i>Default</i>: false<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>targetBucket</b></td>
-        <td>string</td>
-        <td>
-          <br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>targetPrefix</b></td>
-        <td>string</td>
-        <td>
-          <br/>
-        </td>
-        <td>false</td>
-      </tr></tbody>
-</table>
-
-
-### S3Bucket.spec.publicAccessBlock
-<sup><sup>[↩ Parent](#s3bucketspec)</sup></sup>
-
-
-
-Public access block configuration
-
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Required</th>
-        </tr>
-    </thead>
-    <tbody><tr>
-        <td><b>blockPublicAcls</b></td>
-        <td>boolean</td>
-        <td>
-          <br/>
-          <br/>
-            <i>Default</i>: true<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>blockPublicPolicy</b></td>
-        <td>boolean</td>
-        <td>
-          <br/>
-          <br/>
-            <i>Default</i>: true<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>ignorePublicAcls</b></td>
-        <td>boolean</td>
-        <td>
-          <br/>
-          <br/>
-            <i>Default</i>: true<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>restrictPublicBuckets</b></td>
-        <td>boolean</td>
-        <td>
-          <br/>
-          <br/>
-            <i>Default</i>: true<br/>
-        </td>
-        <td>false</td>
-      </tr></tbody>
-</table>
-
-
-### S3Bucket.spec.replication
-<sup><sup>[↩ Parent](#s3bucketspec)</sup></sup>
-
-
-
-Replication configuration
-
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Required</th>
-        </tr>
-    </thead>
-    <tbody><tr>
-        <td><b>destinationBucket</b></td>
-        <td>string</td>
-        <td>
-          <br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>destinationRegion</b></td>
-        <td>string</td>
-        <td>
-          <br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>enabled</b></td>
-        <td>boolean</td>
-        <td>
-          <br/>
-          <br/>
-            <i>Default</i>: false<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>storageClass</b></td>
-        <td>string</td>
-        <td>
-          <br/>
-        </td>
-        <td>false</td>
-      </tr></tbody>
-</table>
-
-
-### S3Bucket.spec.websiteConfiguration
-<sup><sup>[↩ Parent](#s3bucketspec)</sup></sup>
-
-
-
-Static website hosting configuration
-
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Required</th>
-        </tr>
-    </thead>
-    <tbody><tr>
-        <td><b>enabled</b></td>
-        <td>boolean</td>
-        <td>
-          <br/>
-          <br/>
-            <i>Default</i>: false<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>errorDocument</b></td>
-        <td>string</td>
-        <td>
-          <br/>
-          <br/>
-            <i>Default</i>: error.html<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>indexDocument</b></td>
-        <td>string</td>
-        <td>
-          <br/>
-          <br/>
-            <i>Default</i>: index.html<br/>
-        </td>
-        <td>false</td>
-      </tr></tbody>
-</table>
-
-
-### S3Bucket.status
-<sup><sup>[↩ Parent](#s3bucket)</sup></sup>
-
-
-
-
-
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Required</th>
-        </tr>
-    </thead>
-    <tbody><tr>
-        <td><b>bucketArn</b></td>
-        <td>string</td>
-        <td>
-          ARN of the S3 bucket<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>bucketDomainName</b></td>
-        <td>string</td>
-        <td>
-          Domain name of the S3 bucket<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>bucketRegionalDomainName</b></td>
-        <td>string</td>
-        <td>
-          Regional domain name of the S3 bucket<br/>
-        </td>
-        <td>false</td>
-      </tr><tr>
-        <td><b>websiteEndpoint</b></td>
-        <td>string</td>
-        <td>
-          Website endpoint (if website hosting is enabled)<br/>
         </td>
         <td>false</td>
       </tr></tbody>

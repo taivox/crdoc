@@ -1,0 +1,261 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xecrrepositories.artifacts.entigo.com
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  group: artifacts.entigo.com
+  names:
+    kind: XECRRepository
+    plural: xecrrepositories
+    shortNames:
+      - xecrrepo
+  claimNames:
+    kind: ECRRepository
+    plural: ecrrepositories
+    shortNames:
+      - ecrrepo
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                repositoryName:
+                  type: string
+                  description: "Name of the ECR repository"
+                repositoryNamespace:
+                  type: string
+                  description: "Namespace for the ECR repository"
+                scanOnPush:
+                  type: boolean
+                  description: "Enable vulnerability scanning on push"
+                  default: false
+                imageMutability:
+                  type: string
+                  description: "Image tag mutability"
+                  enum:
+                    - "MUTABLE"
+                    - "IMMUTABLE"
+                  default: "IMMUTABLE"
+                maxImageCount:
+                  type: integer
+                  description: "Maximum number of images to keep"
+                  default: 100
+                  minimum: 1
+                  maximum: 10000
+                kmsKeyArn:
+                  default: ""
+                  type: string
+                  description: "KMS key ARN for encryption"
+                tags:
+                  type: object
+                  description: "AWS tags for the repository"
+                  additionalProperties:
+                    type: string
+                deletionProtection:
+                  type: boolean
+                  description: "Enable deletion protection (prevents deletion if images exist)"
+                  default: true
+              required:
+                - repositoryName
+            status:
+              type: object
+              properties:
+                repositoryUrl:
+                  type: string
+                  description: "URL of the ECR repository"
+                repositoryArn:
+                  type: string
+                  description: "ARN of the ECR repository"
+                repositoryName:
+                  type: string
+                  description: "Full repository name in ECR"
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xsecurityzones.tenancy.entigo.com
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  group: tenancy.entigo.com
+  names:
+    kind: XSecurityZone
+    plural: xsecurityzones
+    shortNames:
+      - xsz
+  claimNames:
+    kind: SecurityZone
+    plural: securityzones
+    shortNames:
+      - sz
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+              properties:
+                parameters:
+                  type: object
+                  description: "Security zone configuration parameters"
+                  properties:
+                    name:
+                      type: string
+                      description: "Security zone name (used for namespace, project, and nodepool naming)"
+                    description:
+                      type: string
+                      description: "Description of the security zone"
+                      default: "Security zone for isolated team deployment"
+                    additionalSourceRepos:
+                      type: array
+                      description: "List of allowed source repositories for ArgoCD"
+                      items:
+                        type: string
+                      default: []
+                    resourceQuota:
+                      type: object
+                      description: "Resource quota configuration"
+                      properties:
+                        cpuRequests:
+                          type: string
+                          default: "10"
+                        memoryRequests:
+                          type: string
+                          default: "10Gi"
+                        pods:
+                          type: string
+                          default: "10"
+                      default: {}
+                    nodePool:
+                      type: object
+                      description: "Karpenter node pool configuration"
+                      properties:
+                        enabled:
+                          type: boolean
+                          default: true
+                          description: "Enable dedicated node pool creation"
+                        instanceCategories:
+                          type: array
+                          items:
+                            type: string
+                          default: ["t"]
+                          description: "AWS instance categories (t, m, c, r)"
+                        instanceCpu:
+                          type: array
+                          items:
+                            type: string
+                          default: ["2", "4", "8"]
+                          description: "Allowed CPU counts for instances"
+                        capacityType:
+                          type: array
+                          items:
+                            type: string
+                          default: ["spot", "on-demand"]
+                        cpuLimit:
+                          type: integer
+                          default: 10
+                          description: "Maximum CPU limit for the node pool"
+                        consolidationPolicy:
+                          type: string
+                          default: "WhenEmptyOrUnderutilized"
+                          enum: ["WhenEmpty", "WhenEmptyOrUnderutilized"]
+                        consolidateAfter:
+                          type: string
+                          default: "1m"
+                          description: "Time to wait before consolidation"
+                        nodeClassName:
+                          type: string
+                          default: "karpenter"
+                          description: "EC2NodeClass name to use"
+                      default: {}
+                    rbac:
+                      type: object
+                      description: "RBAC groups configuration for ArgoCD roles"
+                      properties:
+                        fullAccessGroups:
+                          type: array
+                          description: "Groups with full access to applications and projects"
+                          items:
+                            type: string
+                          default: []
+                        gitlabGroups:
+                          type: array
+                          description: "Groups with GitLab CI/CD deployment access"
+                          items:
+                            type: string
+                          default: []
+                        readOnlyGroups:
+                          type: array
+                          description: "Groups with read-only access"
+                          items:
+                            type: string
+                          default: []
+                      default: {}
+                  required:
+                    - name
+                writeConnectionSecretsToNamespace:
+                  type: string
+                  description: "Namespace to write connection secrets to"
+              required:
+                - parameters
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+              properties:
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      lastTransitionTime:
+                        type: string
+                      message:
+                        type: string
+                      reason:
+                        type: string
+                      status:
+                        type: string
+                      type:
+                        type: string
+                    required:
+                      - lastTransitionTime
+                      - reason
+                      - status
+                      - type
+                connectionDetails:
+                  type: object
+                  properties:
+                    lastPublishedTime:
+                      type: string
+                      format: date-time
+                namespaceStatus:
+                  type: object
+                  description: "Status information about the created namespace"
+                  properties:
+                    name:
+                      type: string
+                    ready:
+                      type: boolean
+                nodePoolStatus:
+                  type: object
+                  description: "Status information about the created node pool"
+                  properties:
+                    name:
+                      type: string
+                    ready:
+                      type: boolean
+                    cpuLimit:
+                      type: integer

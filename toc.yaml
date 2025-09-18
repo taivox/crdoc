@@ -3,8 +3,11 @@ metadata:
   weight: 1
   description: "API Reference example"
 groups:
-  - group: entigo.com
+  - group: artifacts.entigo.com
     version: v1alpha1
     kinds:
       - name: ECRRepository
-      - name: S3Bucket
+  - group: tenancy.entigo.com
+    version: v1alpha1
+    kinds:
+      - name: SecurityZone
