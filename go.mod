@@ -1,6 +1,6 @@
 module fybrik.io/crdoc
 
-go 1.19
+go 1.21
 
 require (
 	github.com/Masterminds/sprig/v3 v3.3.0
