@@ -77,3 +77,83 @@ spec:
                 repositoryName:
                   type: string
                   description: "Full repository name in ECR"
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xecrrepos.entigo.com
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  group: entigo.com
+  names:
+    kind: XECRRepo
+    plural: xecrrepos
+    shortNames:
+      - xecrrepo
+  claimNames:
+    kind: ECRRepo
+    plural: ecrrepos
+    shortNames:
+      - ecrrep
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                repositoryName:
+                  type: string
+                  description: "Name of the ECR repository"
+                repositoryNamespace:
+                  type: string
+                  description: "Namespace for the ECR repository"
+                scanOnPush:
+                  type: boolean
+                  description: "Enable vulnerability scanning on push"
+                  default: false
+                imageMutability:
+                  type: string
+                  description: "Image tag mutability"
+                  enum:
+                    - "MUTABLE"
+                    - "IMMUTABLE"
+                  default: "IMMUTABLE"
+                maxImageCount:
+                  type: integer
+                  description: "Maximum number of images to keep"
+                  default: 100
+                  minimum: 1
+                  maximum: 10000
+                kmsKeyArn:
+                  default: ""
+                  type: string
+                  description: "KMS key ARN for encryption"
+                tags:
+                  type: object
+                  description: "AWS tags for the repository"
+                  additionalProperties:
+                    type: string
+                deletionProtection:
+                  type: boolean
+                  description: "Enable deletion protection (prevents deletion if images exist)"
+                  default: true
+              required:
+                - repositoryName
+            status:
+              type: object
+              properties:
+                repositoryUrl:
+                  type: string
+                  description: "URL of the ECR repository"
+                repositoryArn:
+                  type: string
+                  description: "ARN of the ECR repository"
+                repositoryName:
+                  type: string
+                  description: "Full repository name in ECR"
