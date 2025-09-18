@@ -1,7 +1,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xecrrepositories.entigo.com
+  name: ecrrepositories.entigo.com
   annotations:
     argocd.argoproj.io/sync-wave: "-2"
 spec:
