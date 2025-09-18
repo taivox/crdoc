@@ -8,12 +8,12 @@ Packages:
 
 Resource Types:
 
-- [XECRRepository](#xecrrepository)
+- [ECRRepository](#ecrrepository)
 
 
 
 
-## XECRRepository
+## ECRRepository
 <sup><sup>[↩ Parent](#entigocomv1alpha1 )</sup></sup>
 
 
@@ -41,7 +41,7 @@ Resource Types:
       <tr>
       <td><b>kind</b></td>
       <td>string</td>
-      <td>XECRRepository</td>
+      <td>ECRRepository</td>
       <td>true</td>
       </tr>
       <tr>
@@ -50,14 +50,14 @@ Resource Types:
       <td>Refer to the Kubernetes API documentation for the fields of the `metadata` field.</td>
       <td>true</td>
       </tr><tr>
-        <td><b><a href="#xecrrepositoryspec">spec</a></b></td>
+        <td><b><a href="#ecrrepositoryspec">spec</a></b></td>
         <td>object</td>
         <td>
           <br/>
         </td>
         <td>false</td>
       </tr><tr>
-        <td><b><a href="#xecrrepositorystatus">status</a></b></td>
+        <td><b><a href="#ecrrepositorystatus">status</a></b></td>
         <td>object</td>
         <td>
           <br/>
@@ -67,8 +67,8 @@ Resource Types:
 </table>
 
 
-### XECRRepository.spec
-<sup><sup>[↩ Parent](#xecrrepository)</sup></sup>
+### ECRRepository.spec
+<sup><sup>[↩ Parent](#ecrrepository)</sup></sup>
 
 
 
@@ -154,8 +154,8 @@ Resource Types:
 </table>
 
 
-### XECRRepository.status
-<sup><sup>[↩ Parent](#xecrrepository)</sup></sup>
+### ECRRepository.status
+<sup><sup>[↩ Parent](#ecrrepository)</sup></sup>
 
 
 
