@@ -7,4 +7,4 @@ groups:
     version: v1alpha1
     kinds:
       - name: ECRRepository
-      - name: ECRRepo
+      - name: S3Bucket
