@@ -115,7 +115,7 @@ Resource Types:
         <td>
           KMS key ARN for encryption<br/>
           <br/>
-            <i>Default</i>: my-kms-key-arn<br/>
+            <i>Default</i>: <br/>
         </td>
         <td>false</td>
       </tr><tr>
@@ -125,6 +125,8 @@ Resource Types:
           Maximum number of images to keep<br/>
           <br/>
             <i>Default</i>: 100<br/>
+            <i>Minimum</i>: 1<br/>
+            <i>Maximum</i>: 10000<br/>
         </td>
         <td>false</td>
       </tr><tr>
