@@ -7,3 +7,7 @@ groups:
     version: v1alpha1
     kinds:
       - name: ECRRepository
+  - group: entigo.com
+    version: v1alpha1
+    kinds:
+      - name: ECRRepo

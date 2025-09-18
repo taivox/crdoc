@@ -7,4 +7,5 @@ sed -e 's/apiextensions\.crossplane\.io/apiextensions.k8s.io/g' \
 
 go run . --resources ./ecr-modified.yaml --output output.md --toc toc.yaml
 
+
 rm ecr-modified.yaml
