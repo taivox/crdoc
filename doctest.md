@@ -59,9 +59,73 @@
 
 The following resources will be created based on the `parameters.name` value:
 
-| Resource Type      | Naming Pattern    | Example (name="team-alpha") |
-| ------------------ | ----------------- | --------------------------- |
-| Namespace          | `<name>`          | `team-alpha`                |
-| ArgoCD Project     | `<name>-project`  | `team-alpha-project`        |
-| Karpenter NodePool | `<name>-nodepool` | `team-alpha-nodepool`       |
-| Resource Quota     | `<name>-quota`    | `team-alpha-quota`          |
+| Resource Type      | Naming Pattern | Example (name="team-alpha") |
+| ------------------ | -------------- | --------------------------- |
+| Namespace          | `<n>`          | `team-alpha`                |
+| ArgoCD Project     | `<n>-project`  | `team-alpha-project`        |
+| Karpenter NodePool | `<n>-nodepool` | `team-alpha-nodepool`       |
+| Resource Quota     | `<n>-quota`    | `team-alpha-quota`          |
+
+## Examples
+
+### Simple Example
+
+```yaml
+apiVersion: tenancy.entigo.com/v1alpha1
+kind: SecurityZone
+metadata:
+  name: dev-team-zone
+spec:
+  parameters:
+    name: dev-team
+    description: 'Development team security zone'
+```
+
+### Advanced Example
+
+```yaml
+apiVersion: tenancy.entigo.com/v1alpha1
+kind: SecurityZone
+metadata:
+  name: production-zone
+spec:
+  parameters:
+    name: prod-platform
+    description: 'Production platform with strict isolation and high availability'
+
+    # Additional Git repositories for ArgoCD
+    additionalSourceRepos:
+      - 'https://gitlab.company.com/platform/*'
+      - 'https://github.com/company/prod-*'
+      - 'https://gitlab.company.com/shared/helm-charts'
+
+    # Resource quotas for namespace
+    resourceQuota:
+      cpuRequests: '100'
+      memoryRequests: '200Gi'
+      pods: '150'
+
+    # Dedicated node pool configuration
+    nodePool:
+      enabled: true
+      instanceCategories: ['m', 'c', 'r'] # Memory, compute, and memory-optimized
+      instanceCpu: ['8', '16', '32', '64']
+      capacityType: ['on-demand'] # Production uses on-demand only
+      cpuLimit: 500
+      consolidationPolicy: 'WhenEmpty' # Conservative consolidation for production
+      consolidateAfter: '10m'
+      nodeClassName: 'production-nodeclass'
+
+    # RBAC configuration
+    rbac:
+      fullAccessGroups:
+        - 'platform-admins'
+        - 'sre-team'
+      gitlabGroups:
+        - 'prod-ci-runners'
+        - 'deployment-automation'
+      readOnlyGroups:
+        - 'developers'
+        - 'support-team'
+        - 'auditors'
+```
